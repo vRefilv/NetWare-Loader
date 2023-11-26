@@ -8,4 +8,4 @@ Made in python cuz why not
 <p align="center"><a href="https://github.com/waxnet/NetWare/">NetWare</a></p>
 -----
 
-https://clippy.gg/igxbndgt.mp4
+https://r2.e-z.host/2faec9b9-77eb-4d62-825f-f6cc5a714fac/igxbndgt.mp4
