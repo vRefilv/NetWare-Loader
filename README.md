@@ -1,4 +1,4 @@
-# NetWare Loader
+# <p align= "center"> NetWare Loader </p>
 Made in python cuz why not
 
 
@@ -6,8 +6,10 @@ Made in python cuz why not
 <p align="center"><a href="https://github.com/warbler/SharpMonoInjector">SharpMonoInjector</a></p>
 <p align="center"><a href="https://github.com/waxnet/NetWare/">NetWare</a></p>
 
-# Showcase
+# <p align= "center"> # Showcase </p>
 https://github.com/vRefilv/NetWare-Loader/assets/53364591/20a59420-fbbf-42c6-8b6e-748995f9be9a
 
-# Autorun
+# <p align= "center"> Autorun </p>
+```
 in cfg.ini u can change autorun to True or False
+```
