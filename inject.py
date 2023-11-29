@@ -9,6 +9,13 @@ import webbrowser
 from pystyle import Colors,Colorate,Write
 import configparser
 
+
+
+cwd = os.path.abspath(os.path.dirname(__file__))
+
+color = Colors.purple_to_blue
+
+
 config_file = 'cfg.ini'
 # Check if the config file exists
 if not os.path.exists(config_file):
@@ -34,12 +41,36 @@ autorun = config.getboolean('Settings', 'autorun')  # getboolean() converts the 
 def cls():
     os.system("cls")
 cls()
+
+banner= r"""
+--------------------------------------------------------------------------------
+
+    ____               _           __     _   __     __ _       __              
+   / __ \_________    (_)__  _____/ /_   / | / /__  / /| |     / /___ _________ 
+  / /_/ / ___/ __ \  / / _ \/ ___/ __/  /  |/ / _ \/ __/ | /| / / __ `/ ___/ _ \
+ / ____/ /  / /_/ / / /  __/ /__/ /_   / /|  /  __/ /_ | |/ |/ / /_/ / /  /  __/
+/_/   /_/   \____/_/ /\___/\___/\__/  /_/ |_/\___/\__/ |__/|__/\__,_/_/   \___/ 
+                /___/                                                           
+
+                        --------------------------
+                        | Loader made by Refil   |
+                        | NetWare made by waxnet |
+                        --------------------------
+
+--------------------------------------------------------------------------------
+ 
+"""
+print(Colorate.Horizontal(color, banner, True,))
+wait(3)
+
+
+
 #waiting animation function
 def waiting_animation():
     d = ''
-    Write.Print("[/] Waiting for 1v1.lol   ", Colors.blue_to_green, interval=0.05,end='\r')
+    Write.Print("[/] Waiting for 1v1.lol   ", color, interval=0.05,end='\r')
     for i in range(0,4):
-        print(Colorate.Horizontal(Colors.blue_to_green, "[/] Waiting for 1v1.lol"+d, True,),end='\r')
+        print(Colorate.Horizontal(color, "[/] Waiting for 1v1.lol"+d, True,),end='\r')
         d=d+'.'
         wait(0.5)
 
@@ -58,30 +89,30 @@ while checkIfProcessRunning('1v1_LOL.exe') == False:
     #if 1v1_LOL.exe process is not found then
     #and if autorun is true then runs 1v1 lol
     if autorun == True:
-        Write.Print("\nRunning 1v1.lol from steam\n", Colors.blue_to_green, interval=0.05)
+        Write.Print("\nRunning 1v1.lol from steam\n", color, interval=0.05)
         webbrowser.open("steam://rungameid/2305790")
         autorun = False
     waiting_animation()
 else:
     #if netware found
     cls()
-    Write.Print("[+] 1v1.lol found\n", Colors.blue_to_green, interval=0.05)
+    Write.Print("[+] 1v1.lol found\n", color, interval=0.05)
     wait(2)
-    Write.Print("[/] NetWare.dll: Injecting\n", Colors.blue_to_green, interval=0.05)
+    Write.Print("[/] NetWare.dll: Injecting\n", color, interval=0.05)
     
     # injecting netware with sharp mono injector
     try:
         result = subprocess.run(
-            ["smi.exe", "inject", "-p", "1v1_LOL", "-a", "NetWare.dll", "-n", "NetWare", "-c", "Loader", "-m", "Load"],
+            ["smi.exe", "inject", "-p", "1v1_LOL", "-a", cwd+r"\NetWare.dll", "-n", "NetWare", "-c", "Loader", "-m", "Load"],
             capture_output=True,
             text=True
         )
 
         output_str = result.stdout.strip()  # Get the captured output as a string
-        Write.Print("[/] "+output_str, Colors.blue_to_green, interval=0.05)
+        Write.Print("[/] "+output_str, color, interval=0.05)
 
         if result.returncode == 0 and "could not read the file" not in output_str.lower():
-            Write.Print("\n[+] NetWare.dll: Injected successfully", Colors.blue_to_green, interval=0.05)
+            Write.Print("\n[+] NetWare.dll: Injected successfully", Colors.green, interval=0.05)
         else:
             Write.Print(f"\n[-] Error: {result.returncode}", Colors.red, interval=0.05)
             if result.returncode == 0:
