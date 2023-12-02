@@ -1,20 +1,19 @@
 #imports
-import psutil
-import subprocess
-import os
-import time
-import sys
+import psutil, subprocess, os, sys, webbrowser, configparser
 from time import sleep as wait
-import webbrowser
 from pystyle import Colors,Colorate,Write
-import configparser
+from refilmodules import *
+from autoupdate import *
 
-
+cls(None)
 
 cwd = os.path.abspath(os.path.dirname(__file__))
-
+smi = os.path.expandvars(os.path.join(r"%temp%", "NetWare_Loader", "NetWare_Files", "smi.exe"))
+dll = os.path.expandvars(os.path.join(r"%temp%", "NetWare_Loader", "NetWare_Files", "NetWare.dll"))
 color = Colors.purple_to_blue
 
+repo_url = "https://github.com/waxnet/NetWare"
+destination_folder = os.path.expandvars(r"%temp%\NetWare_Loader\NetWare_Files")
 
 config_file = 'cfg.ini'
 # Check if the config file exists
@@ -23,7 +22,10 @@ if not os.path.exists(config_file):
     config = configparser.ConfigParser()
 
     # Add sections and options with default values
-    config['Settings'] = {'autorun': 'False'}
+    config['Settings'] = {
+    'autorun': 'True',
+    'autoupdate': 'True'
+    }
 
     # Write the configuration to the file
     with open(config_file, 'w') as configfile:
@@ -36,11 +38,8 @@ config.read(config_file)
 
 # Access values from the configuration file
 autorun = config.getboolean('Settings', 'autorun')  # getboolean() converts the value to a boolean
-
+autoupdates = config.getboolean('Settings', 'autoupdate')  # getboolean() converts the value to a boolean
 #clear console function
-def cls():
-    os.system("cls")
-cls()
 
 banner= r"""
 --------------------------------------------------------------------------------
@@ -60,20 +59,15 @@ banner= r"""
 --------------------------------------------------------------------------------
  
 """
-print(Colorate.Horizontal(color, banner, True,))
-wait(3)
+stb = "print(Colorate.Horizontal(color, center_text(banner), True,))"
+exec(stb)
+wait(2)
 
-
-
-#waiting animation function
-def waiting_animation():
-    d = ''
-    Write.Print("[/] Waiting for 1v1.lol   ", color, interval=0.05,end='\r')
-    for i in range(0,4):
-        print(Colorate.Horizontal(color, "[/] Waiting for 1v1.lol"+d, True,),end='\r')
-        d=d+'.'
-        wait(0.5)
-
+if autoupdates == True:
+    # Check for update and download the latest release if needed
+    check_for_update(repo_url, destination_folder)
+    wait(2)
+cls(stb)
 #check if process is running function
 def checkIfProcessRunning(processName):
     for proc in psutil.process_iter():
@@ -89,39 +83,39 @@ while checkIfProcessRunning('1v1_LOL.exe') == False:
     #if 1v1_LOL.exe process is not found then
     #and if autorun is true then runs 1v1 lol
     if autorun == True:
-        Write.Print("\nRunning 1v1.lol from steam\n", color, interval=0.05)
+        slowType(center_text("Running 1v1.lol from steam"))
         webbrowser.open("steam://rungameid/2305790")
         autorun = False
-    waiting_animation()
+    waiting_animation("[/] Waiting for 1v1.lol")
 else:
     #if netware found
-    cls()
-    Write.Print("[+] 1v1.lol found\n", color, interval=0.05)
+    cls(stb)
+    slowType(center_text("[+] 1v1.lol found"))
     wait(2)
-    Write.Print("[/] NetWare.dll: Injecting\n", color, interval=0.05)
+    slowType(center_text("[/] NetWare.dll: Injecting"))
     
     # injecting netware with sharp mono injector
     try:
         result = subprocess.run(
-            ["smi.exe", "inject", "-p", "1v1_LOL", "-a", cwd+r"\NetWare.dll", "-n", "NetWare", "-c", "Loader", "-m", "Load"],
+            [smi, "inject", "-p", "1v1_LOL", "-a", dll, "-n", "NetWare", "-c", "Loader", "-m", "Load"],
             capture_output=True,
             text=True
         )
 
         output_str = result.stdout.strip()  # Get the captured output as a string
-        Write.Print("[/] "+output_str, color, interval=0.05)
+        slowType(center_text("[/] "+output_str))
 
         if result.returncode == 0 and "could not read the file" not in output_str.lower():
-            Write.Print("\n[+] NetWare.dll: Injected successfully", Colors.green, interval=0.05)
+            slowType(center_text("[+] NetWare.dll: Injected successfully"))
         else:
-            Write.Print(f"\n[-] Error: {result.returncode}", Colors.red, interval=0.05)
+            slowType(center_text(f"[-] Error: {result.returncode}"))
             if result.returncode == 0:
-                Write.Print(f"\n[-] Error: NetWare.dll not found", Colors.red, interval=0.05)
+                slowType(center_text("[-] Error: NetWare.dll not found"))
             elif result.returncode == 3762504530:
-                Write.Print(f"\n[-] Error: SharpMonoInjector.dll not found", Colors.red, interval=0.05)
+                slowType(center_text("[-] Error: SharpMonoInjector.dll not found"))
 
     except FileNotFoundError:
-        Write.Print("[-] Error: smi.exe not found", Colors.red, interval=0.05)
+        slowType(center_text("[-] Error: smi.exe not found"))
     except Exception as e:
-        Write.Print(f"[-] Error: {str(e)}", Colors.red, interval=0.05)
+        slowType(center_text(f"[-] Error: {str(e)}"))
 input()
